@@ -1,0 +1,21 @@
+SSTV Tool Web
+=============
+
+Copyright (C) 2026 LAN (BI7KGI)  <https://github.com/Lan1081210>
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.  See LICENSE.
+
+It is a derivative of, and links at build time:
+
+  Apricot SSTV  --  https://github.com/SodaGray/apricot-sstv
+  Copyright (C) the apricot-sstv authors, GPL-3.0
+  (src/sstv_dsp.c, src/enc.c are taken from there unmodified)
+
+New in this project (also GPL-3.0):
+  src/shim.c        freestanding libc slice for wasm32
+  src/sstv_web.c    C API used by the page
+  www/*             UI, canvas editor, WASM glue
+  build.sh          build script

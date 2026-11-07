@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: GPL-3.0-only
+     SSTV Tool Web — 慢扫描电视 接收 / 生成
+     Copyright (c) 2026 LAN (BI7KGI). GPL-3.0, inherited from SodaGray/apricot-sstv.
+     Decoder + encoder cores run as WebAssembly; the picture editing is canvas-side. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSTV Tool Web — LAN (BI7KGI)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>SSTV Tool<span>Web</span></h1>
+  <nav class="tabs">
+    <button id="tab-rx" class="active" data-tab="rx">接收</button>
+    <button id="tab-tx" data-tab="tx">生成</button>
+  </nav>
+  <div class="by">© 2026 LAN (BI7KGI)</div>
+</header>
+
+<main>
+  <!-- ------------------------------------------------ receive -->
+  <section id="panel-rx" class="panel active">
+    <div class="row">
+      <label class="file">选择录音<input type="file" id="rx-file" accept="audio/*"></label>
+      <button id="rx-mic">从麦克风听</button>
+      <button id="rx-stop" disabled>停止</button>
+      <span class="hint" id="rx-hint">支持 wav / mp3 / m4a / flac —— 也能直接放电台录音</span>
+    </div>
+    <div class="row">
+      <label>接收模式
+        <select id="rx-mode"><option value="0">自动（认 VIS）</option></select>
+      </label>
+      <label class="chk"><input type="checkbox" id="rx-cont"> 连续（不等 VIS）</label>
+      <label class="chk"><input type="checkbox" id="rx-notimeout" checked> 扫完整张才结束</label>
+      <label>丢同步窗口 <input type="number" id="rx-lost" value="20" min="4" max="120" step="1" style="width:4em"> 秒</label>
+    </div>
+
+    <div class="stage">
+      <canvas id="rx-canvas" width="320" height="256"></canvas>
+      <div class="saved" id="rx-saved"></div>
+    </div>
+
+    <div class="status" id="rx-status">待机</div>
+    <div class="bar"><div id="rx-progress"></div></div>
+  </section>
+
+  <!-- ------------------------------------------------ generate -->
+  <section id="panel-tx" class="panel">
+    <div class="row">
+      <label class="file">选择图片<input type="file" id="tx-file" accept="image/*"></label>
+      <button id="tx-rot">旋转 90°</button>
+      <button id="tx-fliph">左右翻</button>
+      <button id="tx-flipv">上下翻</button>
+      <button id="tx-reset">复位</button>
+      <input type="text" id="tx-text" placeholder="图片上的文字（可留空）" maxlength="40">
+      <select id="tx-pos">
+        <option value="1">左下</option><option value="2">中下</option><option value="3">右下</option>
+        <option value="4">左中</option><option value="5" selected>正中</option><option value="6">右中</option>
+        <option value="7">左上</option><option value="8">中上</option><option value="9">右上</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>模式 <select id="tx-mode"></select></label>
+      <label>适配
+        <select id="tx-fit">
+          <option value="0">留黑边</option><option value="1">裁满</option><option value="2">拉伸</option>
+        </select>
+      </label>
+      <label>字号 <input type="range" id="tx-scale" min="0.5" max="2.5" step="0.05" value="1"></label>
+      <label>缩放 <input type="range" id="tx-zoom" min="1" max="3" step="0.02" value="1"></label>
+      <label>亮度 <input type="range" id="tx-bright" min="-0.4" max="0.4" step="0.01" value="0"></label>
+      <label>对比 <input type="range" id="tx-contrast" min="0.5" max="2" step="0.01" value="1"></label>
+    </div>
+
+    <div class="stage">
+      <canvas id="tx-canvas" width="320" height="240"></canvas>
+      <div class="tip">拖动画面调整位置 · 滚轮缩放</div>
+    </div>
+
+    <div class="row">
+      <button id="tx-make" class="primary">生成并播放</button>
+      <button id="tx-save">存成 WAV</button>
+      <button id="tx-stop" disabled>停止</button>
+      <span class="hint" id="tx-info">选一张图开始</span>
+    </div>
+    <audio id="tx-audio" controls style="display:none"></audio>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 LAN (BI7KGI)</span>
+  <span>解码/编码核心来自 SodaGray/apricot-sstv（GPL-3.0），WASM 移植与界面为本项目新增代码，同样以 GPL-3.0 发布</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
