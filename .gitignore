@@ -1,4 +1,3 @@
-www/sstv.wasm
 www/test/encoded-check.wav
 tools/
 *.o

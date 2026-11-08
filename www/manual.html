@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>SSTV Tool 使用说明</title>
+<style>
+  @page { size: A4; margin: 8mm 8mm 6mm 8mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 8.7pt/1.5 "Times New Roman", "Songti SC", "SimSun", serif;
+    color: #16191d;
+    -webkit-print-color-adjust: exact;
+    display: flex;
+    flex-direction: column;
+    min-height: 281mm;              /* A4 减去 @page 上下边距 */
+  }
+  header {
+    border-bottom: 2pt solid #111417;
+    padding-bottom: 2mm;
+    margin-bottom: 2.4mm;
+    display: flex;
+    align-items: flex-end;
+    gap: 4mm;
+  }
+  h1 { margin: 0; font-size: 18pt; letter-spacing: .3pt; }
+  h1 small { font-size: 9.5pt; font-weight: 400; color: #6b7683; margin-left: 2mm; letter-spacing: 0; }
+  .head-right { margin-left: auto; text-align: right; font-size: 7.2pt; color: #6b7683; line-height: 1.35; }
+  .lede { font-size: 8.6pt; color: #2a3138; margin: 0 0 2.2mm; }
+  .grid { display: flex; gap: 6mm; align-items: flex-start; }
+  .col { flex: 1 1 0; min-width: 0; }
+  section { break-inside: avoid; margin-bottom: 2.2mm; }
+  h2 {
+    font-size: 9.2pt;
+    margin: 0 0 1mm;
+    padding-left: 2mm;
+    border-left: 2.2pt solid #ff9d2e;
+    letter-spacing: .2pt;
+  }
+  p { margin: 0 0 1mm; }
+  ul { margin: 0 0 1mm; padding-left: 3.4mm; }
+  li { margin: 0 0 .3mm; }
+  code, kbd {
+    font: 7.3pt/1 "SF Mono", Menlo, monospace, Menlo, monospace;
+    background: #f1f3f5;
+    border: .4pt solid #dfe3e7;
+    border-radius: 1pt;
+    padding: 0 .7mm;
+  }
+  pre {
+    font: 7.1pt/1.45 "SF Mono", Menlo, monospace, Menlo, monospace;
+    background: #f6f7f8;
+    border: .5pt solid #e2e5e9;
+    border-left: 1.8pt solid #ff9d2e;
+    border-radius: 1.5pt;
+    padding: 1.3mm 1.7mm;
+    margin: 0 0 1.2mm;
+    white-space: pre;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 1.2mm; }
+  th, td { text-align: left; padding: .55mm 1.1mm; border-bottom: .4pt solid #e6e9ec; }
+  th { font-weight: 600; color: #4b5561; border-bottom: .8pt solid #c9d0d6; }
+  td:first-child { white-space: nowrap; }
+  .modes td, .modes th { padding: .45mm 1mm; font-size: 7.9pt; }
+  .note {
+    background: #fff6ea;
+    border: .5pt solid #ffd7a8;
+    border-radius: 1.5pt;
+    padding: 1.2mm 1.8mm;
+    margin: 0;
+    font-size: 8pt;
+  }
+  .steps {
+    margin-top: auto;
+    padding-bottom: 1mm;
+    padding-top: 1.8mm;
+    border-top: 1.4pt solid #111417;
+    break-inside: avoid;
+  }
+  .steps h3 { margin: 0 0 1mm; font-size: 8.7pt; letter-spacing: .2pt; }
+  .steps ol { margin: 0; padding-left: 4.4mm; column-count: 3; column-gap: 5mm; font-size: 8pt; }
+  .steps li { margin: 0; }
+  .tip { margin: 1.4mm 0 0; font-size: 8pt; color: #4b5561; }
+  .steps li::marker { color: #b4620a; font-weight: 700; }
+  footer {
+    margin-top: 1.6mm;
+    padding-top: 1.2mm;
+    border-top: .5pt solid #c9d0d6;
+    display: flex;
+    justify-content: space-between;
+    gap: 4mm;
+    font-size: 6.9pt;
+    color: #6b7683;
+    white-space: nowrap;
+  }
+  footer b { color: #16191d; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>SSTV Tool<small>慢扫描电视 收发工具 · 使用说明</small></h1>
+  <div class="head-right">
+    macOS 客户端 · 命令行 · 网页版<br>
+    © 2026 LAN (BI7KGI) · GPL-3.0
+  </div>
+</header>
+
+<p class="lede">
+怎么装、窗口上每个控件干什么、命令行怎么写、出问题先看哪里。解码与编码核心取自
+SodaGray/apricot-sstv（GPL-3.0，未改动），macOS 外壳、发射端与网页版是新增代码。
+</p>
+
+<div class="grid">
+<div class="col">
+
+<section>
+  <h2>一、安装与启动</h2>
+<pre>cd ~/Projects/apricot-sstv-mac
+make                          # 出 build/sstv-tool 与 App
+cp -R "build/SSTV Tool.app" /Applications
+open -a "/Applications/SSTV Tool.app"
+make install                  # 可选：CLI 进 /usr/local/bin</pre>
+  <ul>
+    <li>双击 App 直接进<b>接收</b>；桌面上有 <code>SSTV Tool</code> 和 <code>SSTV 图片</code> 两个快捷方式</li>
+    <li>收的图在 <code>~/Pictures/SSTV Tool/</code>，发的 WAV 在 <code>~/Music/SSTV Tool/</code></li>
+    <li>ad-hoc 签名按二进制哈希记权限，<b>每次重装都会再问一次麦克风</b></li>
+  </ul>
+</section>
+
+<section>
+  <h2>二、接收：模式不用手选</h2>
+  <p>先读 VIS 头定模式（14 种全覆盖）；VIS 丢了就退回用行同步脉冲的周期和 sync 长度锁定。
+     一张解完自动存图，立刻回聆听。</p>
+  <table>
+    <tr><th>控件</th><th>作用</th></tr>
+    <tr><td><b>收: 自动</b></td><td>按 VIS 认，14 种都收（默认）</td></tr>
+    <tr><td><b>收: PD120</b></td><td>只认这一种：别的 VIS 不理会，VIS 丢了也能靠同步锁</td></tr>
+    <tr><td><b>连续</b></td><td>不等 VIS，一张解完立刻接下一张</td></tr>
+    <tr><td><b>暂停</b></td><td>画面停住、音频照采；几秒内恢复还能接着画，停久了这张接不上（<kbd>空格</kbd>）</td></tr>
+    <tr><td><b>取消这张</b></td><td>放弃当前图，已解出的部分照样存盘（<kbd>X</kbd>）</td></tr>
+  </table>
+  <p>状态行两块：<code>PD120 接收中 192/496 行</code> 与
+     <code>调谐 1700 Hz（偏移 −5）时钟 +3 ppm 同步 192/192 电平 −12 dBFS</code>。
+     <b>偏移</b>是解码器测出并已补偿的频偏（±250 Hz 内自动纠），<b>同步 x/y</b> 是命中率，掉了就是信号不行。</p>
+</section>
+
+<section>
+  <h2>三、生成：图先编辑再发</h2>
+  <ul>
+    <li><b>拖动画面</b>平移取景，<b>滚轮</b>缩放 1–3 倍</li>
+    <li>旋转 90°、左右/上下翻、复位</li>
+    <li>适配：留黑边（默认，保比例）/ 裁满 / 拉伸</li>
+    <li>四个滑块：字号、缩放、亮度、对比</li>
+    <li>文字叠加 + 九宫格位置（左下…正中…右上）</li>
+    <li>预览走的就是编码器的渲染路径，看到什么就发什么</li>
+  </ul>
+  <p><b>生成并播放</b>从系统默认输出放；<b>存成 WAV</b> 落到 <code>~/Music/SSTV Tool/</code>
+     并在 Finder 里选中（想自选路径按住 <kbd>Option</kbd> 再点）。<b>停止</b>随时掐断。</p>
+</section>
+
+<section>
+  <h2>四、网页版</h2>
+<pre>cd ~/Projects/sstv-tool-web && make serve
+# 打开 http://localhost:8765</pre>
+  <p>同一套 C 核心编成 WebAssembly（44 KB）在浏览器里跑，音频图片都不出本机。
+     两页同构：<b>接收</b>（选录音或麦克风）、<b>生成</b>（拖拽、缩放、旋转翻转、文字）。
+     麦克风要 <code>https</code> 或 <code>localhost</code>。</p>
+</section>
+
+</div>
+<div class="col">
+
+<section>
+  <h2>五、命令行速查</h2>
+<pre>sstv-tool 录音.wav          # 解文件，同目录出 PNG
+sstv-tool --listen          # 实时接收 + 窗口
+sstv-tool --listen --device 1     # --list 看设备号
+sstv-tool --listen --rx-mode pd120 --continuous
+sstv-tool --simulate 录音.wav     # 实时回放走链路
+
+sstv-tool encode 图.jpg --mode pd120
+sstv-tool encode 图.jpg --mode m1 --text "CQ LAN"
+sstv-tool encode 图.jpg --rotate 90 --zoom 1.4
+sstv-tool --send 图.jpg --mode pd120  # 开窗口发</pre>
+  <p><code>--mode</code> 吃名字、简写或 VIS 号（<code>pd120 m1 s2 95 44</code>）；
+     <code>--lost 12</code> 恢复「断 12 秒就放弃」的老行为；
+     <code>--modes</code> 列出本构建实际能解的模式。</p>
+</section>
+
+<section>
+  <h2>六、常用频率</h2>
+  <table>
+    <tr><th>波段</th><th>频率</th><th>说明</th></tr>
+    <tr><td>20 m</td><td>14.230 MHz</td><td>最热闹，SSTV 的老窝</td></tr>
+    <tr><td>15 m</td><td>21.340 MHz</td><td>白天传播好时</td></tr>
+    <tr><td>10 m</td><td>28.680 MHz</td><td>太阳活动高的年份</td></tr>
+    <tr><td>2 m · ISS</td><td>145.800 MHz</td><td>FM，空间站活动期用 PD120</td></tr>
+  </table>
+  <p>除空间站是 FM，其余按惯例都是 USB；具体以当地波段规划为准。</p>
+</section>
+
+<section>
+  <h2>七、14 种模式</h2>
+  <table class="modes">
+    <tr><th>模式</th><th>VIS</th><th>画幅</th><th>时长</th></tr>
+    <tr><td>Robot 36/72</td><td>8/12</td><td>320×240</td><td>36/72 s</td></tr>
+    <tr><td>Martin M1/M2</td><td>44/40</td><td>320×256</td><td>114/58 s</td></tr>
+    <tr><td>Scottie S1/S2/DX</td><td>60/56/76</td><td>320×256</td><td>110/71/269 s</td></tr>
+    <tr><td>PD50/90</td><td>93/99</td><td>320×256</td><td>50/90 s</td></tr>
+    <tr><td>PD120/180/240</td><td>95/96/97</td><td>640×496</td><td>126/187/248 s</td></tr>
+    <tr><td>PD160/290</td><td>98/94</td><td>512×400 · 800×616</td><td>161/289 s</td></tr>
+  </table>
+  <p>接收侧宽过 400 px 的按半尺寸存（PD120→320×248、PD160→256×200、PD290→400×308）；
+     发射按原始画幅编码。VIS 4（Robot 24）只认名字不解码。</p>
+</section>
+
+
+
+<section>
+  <h2>八、出问题先看这里</h2>
+  <table>
+    <tr><th>现象</th><th>先查</th></tr>
+    <tr><td>收不到图</td><td>「电平」是否长期 −60 dBFS 以下；音源是否削顶</td></tr>
+    <tr><td>图提前结束</td><td>默认扫完整张才结束；<code>--lost</code> 才提前放弃。看同步掉没掉</td></tr>
+    <tr><td>发出去没声</td><td>WAV 峰值应在 −8.7 dBFS 左右；系统输出设备与音量</td></tr>
+    <tr><td>麦克风无权限</td><td>系统设置 → 隐私与安全性 → 麦克风，勾上 SSTV Tool</td></tr>
+  </table>
+  <div class="note">
+    日志在 <code>~/Library/Logs/SSTV Tool.log</code>，记着 <code>VIS</code>、
+    <code>image ended (原因)</code>、丢样数与存图行——排查先翻它。
+  </div>
+</section>
+
+</div>
+</div>
+
+<div class="steps">
+  <h3>三步上手</h3>
+  <ol>
+    <li><b>载入</b> 选择录音，或从麦克风听</li>
+    <li><b>等</b> 同步数往上走，画面逐行显影</li>
+    <li><b>取图</b> 解完自动存盘，回聆听等下一张</li>
+  </ol>
+  <p class="tip"><b>电平建议</b>：电台 AF 开到峰值 −12 dBFS 上下；关掉 AGC、降噪和 AFC——
+     SSTV 解码吃的是稳定的音调与同步脉冲，压得越狠越容易认不出来。</p>
+</div>
+
+<footer>
+  <span><b>SSTV Tool</b> · macOS arm64 · 14 种模式</span>
+  <span>© 2026 LAN (BI7KGI) · GPL-3.0</span>
+  <span>核心：SodaGray/apricot-sstv</span>
+</footer>
+</body>
+</html>
