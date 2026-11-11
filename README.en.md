@@ -10,6 +10,21 @@ machine.
 
 [中文](README.md) · English
 
+## Use it without building
+
+Online: https://lan1081210.github.io/sstv-tool-web/
+
+Single file: [`sstv-tool-web.html`](sstv-tool-web.html) (~85 KB). The wasm module is inlined as base64,
+and so are the CSS and JS — no external requests, so you can download it, double-click, and go, or drop it
+on any static host.
+
+```bash
+python3 scripts/bundle_single.py   # rebuild (reads www/, also refreshes docs/index.html)
+```
+
+Microphone input needs `https://` or `localhost`. Opened straight from disk (`file://`) the mic is blocked,
+but decoding an audio file works fine.
+
 ## Copyright
 
 © 2026 LAN (BI7KGI). This project — the WASM port, the JavaScript UI and the build script — is

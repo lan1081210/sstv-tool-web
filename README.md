@@ -8,6 +8,19 @@
 解码器和编码器是同一个项目的 C 核心，编译成 WebAssembly 在页面里跑；图片编辑用 `<canvas>`。
 不上传任何数据，全部在本机完成。
 
+## 直接用（不用编译）
+
+在线版：https://lan1081210.github.io/sstv-tool-web/
+
+单文件版：[`sstv-tool-web.html`](sstv-tool-web.html)（约 85 KB）。wasm 以 base64 内联，CSS 与 JS 也都在里面，
+没有外部请求，下载后双击就能用，也可以传到任意静态托管或塞进 U 盘。
+
+```bash
+python3 scripts/bundle_single.py   # 重新打包（读 www/，同时更新 docs/index.html）
+```
+
+麦克风输入要求 `https://` 或 `localhost`；本地直接双击打开（`file://`）时麦克风不可用，选录音文件解码没问题。
+
 ## 版权
 
 © 2026 LAN (BI7KGI)。本项目以其新增的 WASM 移植、JS 界面与构建脚本以 **GPL-3.0** 发布，
